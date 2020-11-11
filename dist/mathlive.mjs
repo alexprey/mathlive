@@ -27166,6 +27166,7 @@ function getDefault() {
         keypressVibration: true,
         keypressSound: null,
         plonkSound: null,
+        toolbar: 'default',
         textToSpeechRules: 'mathlive',
         textToSpeechMarkup: '',
         textToSpeechRulesOptions: {},
@@ -29397,26 +29398,41 @@ function makeKeyboardToolbar(mf, keyboardIDs, currentKeyboard) {
         }
     }
     result += '</div>';
-    // The right hand side of the toolbar, with the copy/undo/redo commands
-    result += `
-        <div class='right'>
+    const toolbarOptions = mf.options.toolbar;
+    const availableActions = toolbarOptions === 'default' ? ['copyToClipboard', 'undo', 'redo'] : [];
+    const actionsMarkup = {
+        copyToClipboard: `
             <div class='action'
                 data-command='"copyToClipboard"'
                 data-ML__tooltip='${localize('tooltip.copy to clipboard')}' data-placement='top' data-delay='1s'>
                 <svg><use xlink:href='#svg-copy' /></svg>
             </div>
+        `,
+        undo: `
             <div class='action disabled'
                 data-command='"undo"'
                 data-ML__tooltip='${localize('tooltip.undo')}' data-placement='top' data-delay='1s'>
                 <svg><use xlink:href='#svg-undo' /></svg>
             </div>
+        `,
+        redo: `
             <div class='action disabled'
                 data-command='"redo"'
                 data-ML__tooltip='${localize('tooltip.redo')}' data-placement='top' data-delay='1s'>
                 <svg><use xlink:href='#svg-redo' /></svg>
             </div>
-        </div>
-    `;
+        `,
+    };
+    // The right hand side of the toolbar, with the copy/undo/redo commands
+    if (availableActions.length > 0) {
+        result += `
+            <div class='right'>
+                ${availableActions
+            .map((action) => actionsMarkup[action])
+            .join('')}
+            </div>
+        `;
+    }
     return "<div class='keyboard-toolbar' role='toolbar'>" + result + '</div>';
 }
 function makeKeycap(mf, elList, chainedCommand) {
@@ -30064,17 +30080,21 @@ function updateUndoRedoButtons(mathfield) {
     if (virtualKeyboardToolbar) {
         const undoButton = virtualKeyboardToolbar.querySelector('[data-command=\'"undo"\']');
         const redoButton = virtualKeyboardToolbar.querySelector('[data-command=\'"redo"\']');
-        if (mathfield.canRedo()) {
-            redoButton.classList.remove('disabled');
+        if (redoButton) {
+            if (mathfield.canRedo()) {
+                redoButton.classList.remove('disabled');
+            }
+            else {
+                redoButton.classList.add('disabled');
+            }
         }
-        else {
-            redoButton.classList.add('disabled');
-        }
-        if (mathfield.canUndo()) {
-            undoButton.classList.remove('disabled');
-        }
-        else {
-            undoButton.classList.add('disabled');
+        if (undoButton) {
+            if (mathfield.canUndo()) {
+                undoButton.classList.remove('disabled');
+            }
+            else {
+                undoButton.classList.add('disabled');
+            }
         }
     }
 }
@@ -33965,7 +33985,7 @@ function getOriginalContent(element, options) {
     return element.getAttribute('data-' + ((_a = options.namespace) !== null && _a !== void 0 ? _a : '') + 'original-content');
 }
 // This SDK_VERSION variable will be replaced during the build process.
-const version = '0.59.0';
+const version = '{{SDK_VERSION}}';
 function deprecated$1(method) {
     console.warn(`Function "${method}" is deprecated`);
 }
@@ -34053,3 +34073,4 @@ var mathlive = {
 
 export default mathlive;
 export { MathfieldElement, astToLatex, convertLatexToMarkup, convertLatexToMathMl, convertLatexToSpeakableText, debug, makeMathField, renderMathInDocument, renderMathInElement$1 as renderMathInElement };
+//# sourceMappingURL=mathlive.mjs.map

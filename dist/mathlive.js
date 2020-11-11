@@ -27172,6 +27172,7 @@ M500 241 v40 H399408 v-40z M500 435 v40 H400000 v-40z`,
             keypressVibration: true,
             keypressSound: null,
             plonkSound: null,
+            toolbar: 'default',
             textToSpeechRules: 'mathlive',
             textToSpeechMarkup: '',
             textToSpeechRulesOptions: {},
@@ -29403,26 +29404,41 @@ M500 241 v40 H399408 v-40z M500 435 v40 H400000 v-40z`,
             }
         }
         result += '</div>';
-        // The right hand side of the toolbar, with the copy/undo/redo commands
-        result += `
-        <div class='right'>
+        const toolbarOptions = mf.options.toolbar;
+        const availableActions = toolbarOptions === 'default' ? ['copyToClipboard', 'undo', 'redo'] : [];
+        const actionsMarkup = {
+            copyToClipboard: `
             <div class='action'
                 data-command='"copyToClipboard"'
                 data-ML__tooltip='${localize('tooltip.copy to clipboard')}' data-placement='top' data-delay='1s'>
                 <svg><use xlink:href='#svg-copy' /></svg>
             </div>
+        `,
+            undo: `
             <div class='action disabled'
                 data-command='"undo"'
                 data-ML__tooltip='${localize('tooltip.undo')}' data-placement='top' data-delay='1s'>
                 <svg><use xlink:href='#svg-undo' /></svg>
             </div>
+        `,
+            redo: `
             <div class='action disabled'
                 data-command='"redo"'
                 data-ML__tooltip='${localize('tooltip.redo')}' data-placement='top' data-delay='1s'>
                 <svg><use xlink:href='#svg-redo' /></svg>
             </div>
-        </div>
-    `;
+        `,
+        };
+        // The right hand side of the toolbar, with the copy/undo/redo commands
+        if (availableActions.length > 0) {
+            result += `
+            <div class='right'>
+                ${availableActions
+            .map((action) => actionsMarkup[action])
+            .join('')}
+            </div>
+        `;
+        }
         return "<div class='keyboard-toolbar' role='toolbar'>" + result + '</div>';
     }
     function makeKeycap(mf, elList, chainedCommand) {
@@ -30070,17 +30086,21 @@ M500 241 v40 H399408 v-40z M500 435 v40 H400000 v-40z`,
         if (virtualKeyboardToolbar) {
             const undoButton = virtualKeyboardToolbar.querySelector('[data-command=\'"undo"\']');
             const redoButton = virtualKeyboardToolbar.querySelector('[data-command=\'"redo"\']');
-            if (mathfield.canRedo()) {
-                redoButton.classList.remove('disabled');
+            if (redoButton) {
+                if (mathfield.canRedo()) {
+                    redoButton.classList.remove('disabled');
+                }
+                else {
+                    redoButton.classList.add('disabled');
+                }
             }
-            else {
-                redoButton.classList.add('disabled');
-            }
-            if (mathfield.canUndo()) {
-                undoButton.classList.remove('disabled');
-            }
-            else {
-                undoButton.classList.add('disabled');
+            if (undoButton) {
+                if (mathfield.canUndo()) {
+                    undoButton.classList.remove('disabled');
+                }
+                else {
+                    undoButton.classList.add('disabled');
+                }
             }
         }
     }
@@ -33971,7 +33991,7 @@ M500 241 v40 H399408 v-40z M500 435 v40 H400000 v-40z`,
         return element.getAttribute('data-' + ((_a = options.namespace) !== null && _a !== void 0 ? _a : '') + 'original-content');
     }
     // This SDK_VERSION variable will be replaced during the build process.
-    const version = '0.59.0';
+    const version = '{{SDK_VERSION}}';
     function deprecated$1(method) {
         console.warn(`Function "${method}" is deprecated`);
     }
@@ -34071,3 +34091,4 @@ M500 241 v40 H399408 v-40z M500 435 v40 H400000 v-40z`,
     Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
+//# sourceMappingURL=mathlive.js.map
