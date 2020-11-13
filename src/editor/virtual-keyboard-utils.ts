@@ -15,10 +15,7 @@ import { inject as injectStylesheet } from '../common/stylesheet';
 import virtualKeyboardStylesheet from '../../css/virtual-keyboard.less';
 // @ts-ignore
 import coreStylesheet from '../../css/core.less';
-import {
-    VirtualKeyboardLayer,
-    VirtualKeyboardToolbarOptions,
-} from '../public/options';
+import { VirtualKeyboardLayer } from '../public/options';
 
 export class VirtualKeyboard {
     mathfield: MathfieldPrivate;
@@ -50,6 +47,10 @@ export class VirtualKeyboard {
         releaseSharedElement(
             document.getElementById('mathlive-alternate-keys-panel')
         );
+        window.removeEventListener('mouseup', this);
+        window.removeEventListener('blur', this);
+        window.removeEventListener('touchend', this);
+        window.removeEventListener('touchcancel', this);
         this.element.remove();
     }
 }
@@ -971,7 +972,7 @@ function makeKeyboardToolbar(
     }
     result += '</div>';
 
-    const toolbarOptions = mf.options.toolbar;
+    const toolbarOptions = mf.options.virtualKeyboardToolbar;
     const availableActions =
         toolbarOptions === 'default' ? ['copyToClipboard', 'undo', 'redo'] : [];
 
