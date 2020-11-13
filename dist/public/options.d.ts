@@ -1,4 +1,4 @@
-import { ErrorListener, MacroDictionary, ParseMode, ParserErrorCode, MathfieldErrorCode } from './core';
+/* 0.59.0 */import { ErrorListener, MacroDictionary, ParseMode, ParserErrorCode, MathfieldErrorCode } from './core';
 import type { Mathfield } from './mathfield';
 import type { Selector } from './commands';
 /**
@@ -384,7 +384,7 @@ export declare type VirtualKeyboardOptions = {
      *
      * Use `none` to disable right hand side toolbar of virtual keyboard.
      */
-    toolbar?: VirtualKeyboardToolbarOptions;
+    virtualKeyboardToolbar?: VirtualKeyboardToolbarOptions;
 };
 /**
  * These methods provide an opportunity to intercept or modify an action.
