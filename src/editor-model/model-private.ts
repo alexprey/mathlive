@@ -29,6 +29,7 @@ import {
     isOffset,
     isSelection,
     isRange,
+    AnnounceVerb,
 } from './utils';
 import { compareSelection, range } from './selection-utils';
 
@@ -44,7 +45,6 @@ export class ModelPrivate implements Model {
 
     root: Atom;
 
-    private _atoms: Atom[];
     private _selection: Selection;
     private _anchor: Offset;
     private _position: Offset;
@@ -64,7 +64,6 @@ export class ModelPrivate implements Model {
         };
         this.root = new Atom('root', { mode: this.options.mode });
         this.root.body = [];
-        this._atoms = null;
         this._selection = { ranges: [[0, 0]], direction: 'none' };
         this._anchor = 0;
         this._position = 0;
@@ -77,13 +76,7 @@ export class ModelPrivate implements Model {
     }
 
     get atoms(): Atom[] {
-        // The root is dirty when there has been some strucural changes
-        // (adding/removing atoms) which would invalidate the iterator
-        if (!this._atoms || this.root.isDirty) {
-            this._atoms = this.root.children;
-            this.root.isDirty = false;
-        }
-        return this._atoms;
+        return this.root.children;
     }
 
     /**
@@ -95,6 +88,18 @@ export class ModelPrivate implements Model {
     set selection(value: Selection) {
         this.setSelection(value);
     }
+
+    // // Update the mode
+    // {
+    //     const newMode =
+    //         getMode(this.model, this.model.position) ??
+    //         this.options.defaultMode;
+    //     if (this.mode === 'command' && newMode !== 'command') {
+    //         complete(this, 'accept', { mode: newMode });
+    //     } else {
+    //         this.switchMode(newMode);
+    //     }
+    // }
 
     setSelection(from: Offset, to: Offset): boolean;
     setSelection(range: Range): boolean;
@@ -119,6 +124,7 @@ export class ModelPrivate implements Model {
                 value.ranges[0][0] === value.ranges[0][1]
             ) {
                 const pos = value.ranges[0][0];
+                console.assert(pos >= 0 && pos <= this.lastOffset);
                 this._position = pos;
                 this._anchor = pos;
                 this._selection = value;
@@ -147,21 +153,6 @@ export class ModelPrivate implements Model {
                     // and cursor
                     // @todo array
                 } else {
-                    // 3b/ Otherwise, account for the common ancestor
-
-                    // 3b.1/ Go up from the anchor until we reach the common ancestor
-                    // if (first.parent !== commonAncestor) {
-                    //     while (first.parent !== commonAncestor) {
-                    //         first = first.parent;
-                    //     }
-                    //     first = first.leftSibling;
-                    // }
-
-                    // 3b.2/ Go up from the cursor until we reach the common ancestor
-                    // while (last.parent !== commonAncestor) {
-                    //     last = last.parent;
-                    // }
-
                     this._selection = {
                         ranges: [[this.offsetOf(first), this.offsetOf(last)]],
                         direction: value.direction,
@@ -172,8 +163,13 @@ export class ModelPrivate implements Model {
                     } else {
                         this._position = this._selection.ranges[0][1];
                     }
+                    console.assert(
+                        this._position >= 0 && this._position <= this.lastOffset
+                    );
                 }
             }
+
+            // Adjust mode
         });
     }
 
@@ -530,7 +526,7 @@ export class ModelPrivate implements Model {
                 parent = parent.parent;
             }
 
-            this._position = position;
+            this._position = this.normalizeOffset(position);
             this._selection = {
                 ranges: [[start, end]],
                 direction: 'none',
@@ -557,8 +553,22 @@ export class ModelPrivate implements Model {
         };
     }
 
+    /**
+     * This method is called to provide feedback when using a screen reader
+     * or other assistive device, for example when changing the selection or
+     * moving the insertion point.
+     *
+     * It can also be used with the 'plonk' command to provide an audible
+     * feedback when a command is not possible.
+     *
+     * This method should not be called from other methods of the model
+     * (such as `setSelection`) as these methods can also be called
+     * programmatically and a feedback in these case would be innapropriate,
+     * however they should be called from functions called as a result of a user
+     * action, such as the functions in `commands.ts`
+     */
     announce(
-        command: string,
+        command: AnnounceVerb,
         previousPosition?: number,
         atoms: Atom[] = []
     ): void {
@@ -574,14 +584,14 @@ export class ModelPrivate implements Model {
         const oldSelection = this._selection;
         const oldAnchor = this._anchor;
         const oldPosition = this._position;
-        let contentChanged = false;
         let selectionChanged = false;
 
         const saved = this.suppressChangeNotifications;
         this.suppressChangeNotifications = true;
+        const previousCounter = this.root.changeCounter;
         f();
 
-        contentChanged = this.root._isDirty;
+        const contentChanged = this.root.changeCounter !== previousCounter;
         if (
             oldAnchor !== this._anchor ||
             oldPosition !== this._position ||
