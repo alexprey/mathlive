@@ -313,11 +313,14 @@ const ALT_KEYS_BASE = {
         { latex: '\\iint', classes: 'small' },
         { latex: '\\iiint', classes: 'small' },
         { latex: '\\oint', classes: 'small' },
-        { latex: '\\dfrac{\\rd}{\\rd x}', classes: 'small' },
+        {
+            latex: '\\dfrac{\\, \\mathrm{d}}{\\, \\mathrm{d} x}',
+            classes: 'small',
+        },
         { latex: '\\frac{\\partial}{\\partial x}', classes: 'small' },
 
-        '\\capitalDifferentialD',
-        '\\rd',
+        '\\, \\mathrm{D}',
+        '\\, \\mathrm{d}',
         '\\partial',
     ],
 
@@ -358,7 +361,7 @@ const ALT_KEYS_BASE = {
     d: [{ latex: '\\daleth', aside: 'daleth' }],
     D: [{ latex: '\\daleth', aside: 'daleth' }],
     e: [
-        { latex: '\\exponentialE', aside: 'exponential e' },
+        { latex: 'e', aside: 'exponential e' },
         { latex: '\\exists', aside: 'there is' },
         { latex: '\\nexists', aside: 'there isn’t' },
     ],
@@ -529,8 +532,8 @@ const LAYERS = {
                 <li class='separator w5'></li>
                 <row name='numpad-1'/>
                 <li class='separator w5'></li>
-                <li class='keycap tex' data-insert='$$\\exponentialE$$' data-alt-keys='ee'>e</li>
-                <li class='keycap tex' data-insert='$$\\imaginaryI$$' data-alt-keys='ii'>i</li>
+                <li class='keycap tex' data-insert='$$\\mathrm{e}$$' data-alt-keys='ee'>e</li>
+                <li class='keycap tex' data-insert='$$\\mathrm{i}$$' data-alt-keys='ii'>i</li>
                 <li class='keycap tex' data-latex='\\pi' data-alt-keys='numeric-pi'></li>
             </ul>
             <ul>
@@ -819,7 +822,7 @@ const LAYERS = {
                 <li class='fnbutton' data-insert='\\sin'></li>
                 <li class='fnbutton' data-insert='\\sin^{-1}'></li>
                 <li class='fnbutton' data-insert='\\ln'></li>
-                <li class='fnbutton' data-insert='\\exponentialE^{#?}'></li>
+                <li class='fnbutton' data-insert='\\mathrm{e}^{#?}'></li>
                 <li class='bigfnbutton' data-insert='$$\\operatorname{lcm}(#?)$$' data-latex='\\operatorname{lcm}()'></li>
                 <li class='bigfnbutton' data-insert='$$\\operatorname{ceil}(#?)$$' data-latex='\\operatorname{ceil}()'></li>
                 <li class='bigfnbutton' data-insert='$$\\lim_{n\\to\\infty}$$'></li>
@@ -845,7 +848,7 @@ const LAYERS = {
                 <li class='bigfnbutton' data-insert='$$#0 \\mod$$' data-latex='\\mod'></li>
                 <li class='bigfnbutton' data-insert='$$\\operatorname{round}(#?) $$' data-latex='\\operatorname{round}()'></li>
                 <li class='bigfnbutton' data-insert='$$\\prod_{n\\mathop=0}^{\\infty}$$' data-latex='{\\scriptstyle \\prod_{n=0}^{\\infty}}'></li>
-                <li class='bigfnbutton' data-insert='$$\\frac{\\differentialD #0}{\\differentialD x}$$'></li>
+                <li class='bigfnbutton' data-insert='$$\\frac{\\, \\mathrm{d} #0}{\\, \\mathrm{d} x}$$'></li>
                 <li class='action font-glyph bottom right' data-command='["performWithFeedback","deleteBackward"]'>&#x232b;</li></ul>
             <ul><li class='separator'></li>
                 <li class='fnbutton'>(</li>

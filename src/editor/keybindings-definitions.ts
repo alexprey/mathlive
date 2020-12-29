@@ -246,7 +246,7 @@ export const DEFAULT_KEYBINDINGS: Keybinding[] = [
     {
         key: 'alt+d',
         ifMode: 'math',
-        command: ['insert', '$$\\differentialD$$'],
+        command: ['insert', '$$\\,\\mathrm{D}$$'],
     },
     {
         key: 'alt+shift+o',
@@ -357,7 +357,7 @@ export const REVERSE_KEYBINDINGS = {
     '\\infty': 'alt+[Digit5]',
     '\\wedge': 'alt+[Digit5]',
     '\\vee': 'alt+shift+[Digit6]',
-    '\\differentialD': 'alt+d',
+    '\\, \\mathrm{D}': 'alt+d',
     '\\partial': 'alt+shift+d',
     '\\frac': 'Slash',
     '\\emptyset': 'alt+o',

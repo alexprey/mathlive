@@ -113,7 +113,7 @@ export const NOTES = {
     '\\Re': 'Real part of',
     '\\gothicCapitalR': 'Real part of',
     '\\gothicCapitalI': 'Imaginary part part of',
-    '\\differentialD': 'differential d',
+    '\\, \\mathrm{D}': 'differential d',
     '\\aleph': [
         'aleph',
         'infinite cardinal',

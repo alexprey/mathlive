@@ -31,12 +31,6 @@ export const INLINE_SHORTCUTS: {
             'nothing+digit+function+frac+surd+binop+relop+punct+array+openfence+closefence+space+text',
         value: '\\imaginaryJ',
     },
-    ee: {
-        mode: 'math',
-        after:
-            'nothing+digit+function+frac+surd+binop+relop+punct+array+openfence+closefence+space+text',
-        value: '\\exponentialE',
-    },
 
     nabla: { mode: 'math', value: '\\nabla' },
     grad: { mode: 'math', value: '\\nabla' },
@@ -58,8 +52,8 @@ export const INLINE_SHORTCUTS: {
     prod: { mode: 'math', value: '\\prod_{#?}^{#?}' },
     sqrt: { mode: 'math', value: '\\sqrt{#?}' },
     // '∫':                    '\\int',             // There's a alt-B command for this
-    '∆': { mode: 'math', value: '\\differentialD' }, // @TODO: is \\diffD most common?
-    '∂': { mode: 'math', value: '\\differentialD' },
+    '∆': { mode: 'math', value: '\\,\\Delta' }, // @TODO: is \\diffD most common?
+    '∂': { mode: 'math', value: '\\,\\delta' },
 
     // Functions
     arcsin: { mode: 'math', value: '\\arcsin' },
@@ -86,19 +80,19 @@ export const INLINE_SHORTCUTS: {
         mode: 'math',
         after:
             'nothing+digit+function+frac+surd+binop+relop+punct+array+openfence+closefence+space+text',
-        value: '\\differentialD x',
+        value: '\\, \\mathrm{d} x',
     },
     dy: {
         mode: 'math',
         after:
             'nothing+digit+function+frac+surd+binop+relop+punct+array+openfence+closefence+space+text',
-        value: '\\differentialD y',
+        value: '\\, \\mathrm{d} y',
     },
     dt: {
         mode: 'math',
         after:
             'nothing+digit+function+frac+surd+binop+relop+punct+array+openfence+closefence+space+text',
-        value: '\\differentialD t',
+        value: '\\, \\mathrm{d} t',
     },
 
     // Logic
