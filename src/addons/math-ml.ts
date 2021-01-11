@@ -637,10 +637,13 @@ function atomToMathML(atom, options): string {
     };
 
     const SPECIAL_IDENTIFIERS = {
-        '\\exponentialE': '&#x02147;',
-        '\\imaginaryI': '&#x2148;',
         '\\differentialD': '&#x2146;',
         '\\capitalDifferentialD': '&#x2145;',
+        '\\rd': '&#x2146;',
+        '\\rD': '&#x2145;',
+        '\\exponentialE': '&#x02147;',
+        '\\imaginaryI': '&#x2148;',
+        '\\imaginaryJ': '&#x2149;',
         '\\alpha': '&#x03b1;',
         '\\pi': '&#x03c0;',
         '\\infty': '&#x221e;',
@@ -1028,6 +1031,18 @@ function atomToMathML(atom, options): string {
                     }
                     result += '</mo>';
                 }
+                break;
+
+            case 'macro':
+                if (SPECIAL_IDENTIFIERS[command]) {
+                    result =
+                        '<mo' +
+                        makeID(atom.id, options) +
+                        '>' +
+                        SPECIAL_IDENTIFIERS[command] +
+                        '</mo>';
+                }
+
                 break;
 
             // case 'mathstyle':
