@@ -446,10 +446,10 @@ function scanOperator(stream, final, options) {
             const isUnit = atom.symbol === '\\operatorname';
             const op = isUnit
                 ? '<mi class="MathML-Unit"' +
-                  makeID(atom.id, options) +
-                  '>' +
-                  toString(atom.value) +
-                  '</mi>'
+                makeID(atom.id, options) +
+                '>' +
+                toString(atom.value) +
+                '</mi>'
                 : toMo(atom, options);
             mathML += op;
             stream.index += 1;
@@ -721,7 +721,7 @@ function atomToMathML(atom, options): string {
                         if (atom.colFormat[i].align) {
                             result +=
                                 { l: 'left', c: 'center', r: 'right' }[
-                                    atom.colFormat[i].align
+                                atom.colFormat[i].align
                                 ] + ' ';
                         }
                     }
@@ -943,7 +943,10 @@ function atomToMathML(atom, options): string {
                 }
                 break;
 
-            case 'placeholder': // no real equivalent in MathML -- will generate a '?'qq
+            case 'placeholder': { // no real equivalent in MathML -- will generate a '?'qq
+                result = '<mo>&#9633;</mo>'
+                break;
+            }
             case 'mord': {
                 result =
                     SPECIAL_IDENTIFIERS[command] ||
