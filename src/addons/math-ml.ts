@@ -242,11 +242,11 @@ function parseSubsup(base, stream, options) {
         mathML += '</msubsup>';
     } else if (atom.superscript) {
         mathML = '<msup>' + base;
-        mathML += toMathML(atom.superscript, 0, 0, options).mathML;
+        mathML += toMathML(atom.superscript, 0, 0, options).mathML || `<mn>${PLACEHOLDER_SYMBOL}</mn>`;
         mathML += '</msup>';
     } else if (atom.subscript) {
         mathML = '<msub>' + base;
-        mathML += toMathML(atom.subscript, 0, 0, options).mathML;
+        mathML += toMathML(atom.subscript, 0, 0, options).mathML || `<mn>${PLACEHOLDER_SYMBOL}</mn>`;
         mathML += '</msub>';
     }
 
