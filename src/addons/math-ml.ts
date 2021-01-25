@@ -679,6 +679,7 @@ function atomToMathML(atom, options): string {
         '\\qquad': 2,
         '\\enskip': 0.5,
     };
+    const PLACEHOLDER_SYMBOL = '&#9633;';
 
     let result = '';
     let sep = '';
@@ -815,7 +816,7 @@ function atomToMathML(atom, options): string {
                     result += '</mroot>';
                 } else {
                     result += '<msqrt' + makeID(atom.id, options) + '>';
-                    result += toMathML(atom.body, 0, 0, options).mathML;
+                    result += toMathML(atom.body, 0, 0, options).mathML || `<mo>${PLACEHOLDER_SYMBOL}</mo>`;
                     result += '</msqrt>';
                 }
                 break;
@@ -944,7 +945,10 @@ function atomToMathML(atom, options): string {
                 }
                 break;
 
-            case 'placeholder': // no real equivalent in MathML -- will generate a '?'qq
+            case 'placeholder': { // no real equivalent in MathML -- will generate a '?'qq
+                result = `<mo>${PLACEHOLDER_SYMBOL}</mo>`;
+                break;
+            }
             case 'mord': {
                 result =
                     SPECIAL_IDENTIFIERS[command] ||
