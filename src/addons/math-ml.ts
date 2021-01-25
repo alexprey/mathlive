@@ -234,9 +234,9 @@ function parseSubsup(base, stream, options) {
         return false;
     }
 
+    const PLACEHOLDER_SYMBOL = '&#9633;';
     if (atom.superscript && atom.subscript) {
         mathML = '<msubsup>' + base;
-        const PLACEHOLDER_SYMBOL = '&#9633;';
         mathML += toMathML(atom.subscript, 0, 0, options).mathML || `<mn>${PLACEHOLDER_SYMBOL}</mn>`;
         mathML += toMathML(atom.superscript, 0, 0, options).mathML || `<mi>${PLACEHOLDER_SYMBOL}</mi>`;
         mathML += '</msubsup>';
