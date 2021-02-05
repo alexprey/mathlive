@@ -234,18 +234,27 @@ function parseSubsup(base, stream, options) {
         return false;
     }
 
+    const PLACEHOLDER_SYMBOL = '&#9633;';
     if (atom.superscript && atom.subscript) {
         mathML = '<msubsup>' + base;
-        mathML += toMathML(atom.subscript, 0, 0, options).mathML;
-        mathML += toMathML(atom.superscript, 0, 0, options).mathML;
+        mathML +=
+            toMathML(atom.subscript, 0, 0, options).mathML ||
+            `<mn>${PLACEHOLDER_SYMBOL}</mn>`;
+        mathML +=
+            toMathML(atom.superscript, 0, 0, options).mathML ||
+            `<mi>${PLACEHOLDER_SYMBOL}</mi>`;
         mathML += '</msubsup>';
     } else if (atom.superscript) {
         mathML = '<msup>' + base;
-        mathML += toMathML(atom.superscript, 0, 0, options).mathML;
+        mathML +=
+            toMathML(atom.superscript, 0, 0, options).mathML ||
+            `<mn>${PLACEHOLDER_SYMBOL}</mn>`;
         mathML += '</msup>';
     } else if (atom.subscript) {
         mathML = '<msub>' + base;
-        mathML += toMathML(atom.subscript, 0, 0, options).mathML;
+        mathML +=
+            toMathML(atom.subscript, 0, 0, options).mathML ||
+            `<mn>${PLACEHOLDER_SYMBOL}</mn>`;
         mathML += '</msub>';
     }
 
@@ -446,10 +455,10 @@ function scanOperator(stream, final, options) {
             const isUnit = atom.symbol === '\\operatorname';
             const op = isUnit
                 ? '<mi class="MathML-Unit"' +
-                makeID(atom.id, options) +
-                '>' +
-                toString(atom.value) +
-                '</mi>'
+                  makeID(atom.id, options) +
+                  '>' +
+                  toString(atom.value) +
+                  '</mi>'
                 : toMo(atom, options);
             mathML += op;
             stream.index += 1;
@@ -722,7 +731,7 @@ function atomToMathML(atom, options): string {
                         if (atom.colFormat[i].align) {
                             result +=
                                 { l: 'left', c: 'center', r: 'right' }[
-                                atom.colFormat[i].align
+                                    atom.colFormat[i].align
                                 ] + ' ';
                         }
                     }
@@ -815,7 +824,9 @@ function atomToMathML(atom, options): string {
                     result += '</mroot>';
                 } else {
                     result += '<msqrt' + makeID(atom.id, options) + '>';
-                    result += toMathML(atom.body, 0, 0, options).mathML || `<mo>${PLACEHOLDER_SYMBOL}</mo>`;
+                    result +=
+                        toMathML(atom.body, 0, 0, options).mathML ||
+                        `<mo>${PLACEHOLDER_SYMBOL}</mo>`;
                     result += '</msqrt>';
                 }
                 break;
@@ -944,7 +955,8 @@ function atomToMathML(atom, options): string {
                 }
                 break;
 
-            case 'placeholder': { // no real equivalent in MathML -- will generate a '?'qq
+            case 'placeholder': {
+                // no real equivalent in MathML -- will generate a '?'qq
                 result = `<mo>${PLACEHOLDER_SYMBOL}</mo>`;
                 break;
             }
